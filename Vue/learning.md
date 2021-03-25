@@ -100,3 +100,82 @@ Props 传进来的数据为单向数据流，无法修改，此时我们修改 P
     - 总结：
 
         如果要频繁切换某节点，使⽤ `v-show` *(切换开销⽐较⼩，初始开销较⼤)*。如果不需要频繁切换某节点使⽤ `v-if`*（初始渲染开销较⼩，切换开销⽐较⼤）*。
+
+## Vue 事件总线
+
+父子组件之间的通信可是使用 `$Emit` 方法进行传递，但是当我们需要让两个不相关的组件之间进行通信或者一个父组件中嵌套了很多子孙组件，使用 `$Emit` 方法就会变得难以管理。
+
+如果有这样一种方法，当一个组件产生一个事件后就发出一个广播，让在监听这个事件的组件能收到这个广播，这样就完成了组件之间越级的事件传递，这个方法就是事件总线，即 `EventBus`
+
+### 创建事件总线
+
+- 创建全局事件总线：
+
+    - 在 `main.js` 文件中创建 `EventBus`：
+
+        ```javaScript
+        Vue.prototype.$EventBus = new Vue()
+        ```
+
+    - 在组件中引用：
+
+      ```javaScript
+      this.$EventBus.$emit('eventName',{/* props */})
+      ```
+
+- 创建单独的事件总线：
+
+    - 创建一个单独的 `event-bus.js` 文件：
+
+        ```javaScript
+        import Vue from 'vue';
+        let EventBus = new Vue()
+        export default EventBus
+        ```
+
+    - 在组件中引用：
+
+        ```Html
+        <script>
+          import EventBus from ${url}
+          EventBus.$emit('eventName', {/* props */})
+        </script>
+        ```
+
+### 监听事件
+
+- 子组件事件：
+
+    ```javaScript
+    handler(){
+      this.$EventBus.$emit('click',{ /* props */})
+    }
+    ```
+
+- 父组件监听：
+
+    ```javaScript
+    mounted(){
+      this.$EventBus.$on('click',(props) => {
+
+      })
+    }
+    ```
+
+可以看到，子事件使用 `$emit` 触发自定义事件，而父组件使用 `$on` 去监听自定义事件。
+
+那么什么是 `EventBus` 呢，为什么我们在初始化他的时候，使用的是 `new Vue()` 去新建一个 `Vue` 实例呢？
+
+通过查看官方文档，我们可以看到官方文档中是没有 `EventBus` 的，然而我们注意到官方文档中定义了 `vm.$emit` 和 `vm.$on` 方法。而实际上这就是 `EventBus` 所做的事情，即新建一个 `Vue` 实例去调用这两个方法。
+
+> 实质上EventBus是一个不具备 DOM 的组件，它具有的仅仅只是它实例方法而已，因此它非常的轻便。
+
+### 移除监听
+
+可以直接使用 `EventBus.$off(eventName)` 来移除监听 `eventName` 事件。
+
+```javaScript
+this.$EventBus.$off('eventName');
+```
+
+同时你也可以使用 `EventBus.$off()` 用来关闭所有正在监听的事件，不需要添加任何参数。
