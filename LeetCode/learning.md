@@ -1,4 +1,4 @@
-# Leetcode 刷题记录
+# LeetCode 刷题记录
 
 ## #5709 最大升序子数组和 `(Easy)`
 
@@ -6,7 +6,7 @@
 
 - 简述：
 
-    给你一个正整数组成的数组 nums ，返回 nums 中一个 升序 子数组的最大可能元素和。
+    给你一个正整数组成的数组 nums ，返回 nums 中一C个 升序 子数组的最大可能元素和。
 
     子数组是数组中的一个连续数字序列。
 
@@ -106,8 +106,8 @@
     ```javaScript
     /**
      * @param {number[]} nums
-    * @return {boolean}
-    */
+     * @return {boolean}
+     */
     var find132pattern = function(nums) {
       let stack = []
       let last = Number.MIN_SAFE_INTEGER
@@ -130,3 +130,76 @@
     线性的时间复杂度，执行速度还算理想。
 
     [![6bcQ2T.png](https://z3.ax1x.com/2021/03/24/6bcQ2T.png)](https://imgtu.com/i/6bcQ2T)
+
+## #82 删除排序链表中的重复元素 Ⅱ `Medium`
+
+### 描述
+
+- 简述：
+
+    存在一个按升序排列的链表，给你这个链表的头节点 head ，请你删除链表中所有存在数字重复情况的节点，只保留原始链表中 没有重复出现 的数字。
+
+    返回同样按升序排列的结果链表。
+
+- 示例 1：
+
+    [![6XF7CD.png](https://z3.ax1x.com/2021/03/25/6XF7CD.png)](https://imgtu.com/i/6XF7CD)
+
+    ```shell
+    # input -> head = [1,2,3,3,4,4,5]
+    # output -> [1,2,5]
+    ```
+
+- 示例 2：
+
+    [![6XFqvd.png](https://z3.ax1x.com/2021/03/25/6XFqvd.png)](https://imgtu.com/i/6XFqvd)
+
+    ```shell
+    # input -> head = [1,1,1,2,3]
+    # output -> [2,3]
+    ```
+
+### 题解
+
+- 思路：
+
+    由题目可得知，链表是按照升序排列的，这意味着重复的元素都是紧紧排列在一起的，这大大减少了这道题的难度。
+
+    我们遍历这个链表，比较当前的值和下一个节点的值是否想同，如果不相同就继续迭代到下一个元素，若出现相同的情况就将当前值记录下来，依次比较链表之后节点的值，直到出现不同的值或抵达链表尾部是才将指针指向这个节点。
+
+- 代码：
+
+    ```javaScript
+    /**
+     * Definition for singly-linked list.
+     * function ListNode(val, next) {
+     *   this.val = (val===undefined ? 0  : val)
+     *   this.next = (next===undefined ? null : next)
+     * }
+     */
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    var deleteDuplicates = function(head) {
+      const temp = new ListNode(0,head)
+      let cur = temp
+      while(cur.next && cur.next.next){
+        if(cur.next.val === cur.next.next.val){
+          const x = cur.next.val
+          while (cur.next && cur.next.val === x) {
+            cur.next = cur.next.next;
+          }
+        }else{
+          cur = cur.next
+        }
+      }
+      return temp.next
+    };
+    ```
+
+- 执行速度：
+
+    `O(n)` 的时间复杂度，时间还算可以
+
+    [![6XEVhT.png](https://z3.ax1x.com/2021/03/25/6XEVhT.png)](https://imgtu.com/i/6XEVhT)
