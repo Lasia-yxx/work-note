@@ -203,3 +203,75 @@
     `O(n)` 的时间复杂度，时间还算可以
 
     [![6XEVhT.png](https://z3.ax1x.com/2021/03/25/6XEVhT.png)](https://imgtu.com/i/6XEVhT)
+
+## #面试题 17.21 直方图的水量 `Hard`
+
+### 描述
+
+- 简述：
+
+    给定一个直方图(也称柱状图)，假设有人从上面源源不断地倒水，最后直方图能存多少水量?直方图的宽度为 1。
+
+    [![cmnMCj.png](https://z3.ax1x.com/2021/04/02/cmnMCj.png)](https://imgtu.com/i/cmnMCj)
+
+- 示例 1：
+
+    ```shell
+    # input -> [0,1,0,2,1,0,1,3,2,1,2,1]
+    # output -> 6
+    ```
+
+### 题解
+
+- 思路：
+
+    这道题使用动态规范是相对常见的解法，但是动态规划会需要维护一个数组，导致空间复杂度变成 `O(n)`，那么有没有相对空间复杂度较低的解法呢？
+
+    我们可以观察这个直方图，我们从左边到右边遍历一遍，我们可以得出，蓄水的地方一定是左右较高，中间低洼的。那么我们从左边到右边开始遍历，不断的去寻找左边中最高的元素，用最高的元素减去当前的高度，就能得出这一单元格的蓄水量。而且我们不断的去更新最高的高度，就意味着，我们不会出现负值的情况。
+
+    看起来很完美的解法，只需要一次循环就可以得出答案，但是如果最高的单元格在直方图中央的话，那么我们越过之后的循环就会陷入错误之中。
+
+    通过观察，我们发现，在一次循环中，在最高点左边的结果都是正确的，那么我们可以维护那个指针，一个从左边循环，一个从右边循环，当一个指针指向最高点的时候，就让这个指针停止行走，知道两个指针相遇，我们就可以得出答案。
+
+    知道了思路，接下来就是代码实现，但是我们需要先找出最高点所在的位置。
+
+- 代码：
+
+    ```javaScript
+    /**
+    * @param {number[]} height
+    * @return {number}
+    */
+    var trap = function(height) {
+        let ans = 0;
+        let left = 0, right = height.length - 1;
+        let leftMax = 0, rightMax = 0;
+        let stop = 0
+        let max = 0
+        for(let i = 0;i<height.length;i++){
+            if(max < height[i]){
+                max = height[i]
+                stop = i
+            }
+        }
+        while(left < right){
+            leftMax = Math.max(leftMax, height[left]);
+            rightMax = Math.max(rightMax, height[right]);
+            if(left !== stop){
+                ans += leftMax - height[left]
+                left++
+            }
+            if(right !== stop){
+                ans += rightMax - height[right]
+                right--
+            }
+        }
+        return ans;
+    };
+    ```
+
+- 执行速度：
+
+    我们需要先循环找出最高点的位置，之后两个指针需要进行循环，所以，时间复杂度为 `O(1.5n)`，空间复杂度为 O(1)
+
+    [![cmisDH.png](https://z3.ax1x.com/2021/04/02/cmisDH.png)](https://imgtu.com/i/cmisDH)
