@@ -131,7 +131,7 @@
 
     [![6bcQ2T.png](https://z3.ax1x.com/2021/03/24/6bcQ2T.png)](https://imgtu.com/i/6bcQ2T)
 
-## #82 删除排序链表中的重复元素 Ⅱ `Medium`
+## #82 删除排序链表中的重复元素 v2 `Medium`
 
 ### 描述
 
@@ -276,7 +276,7 @@
 
     [![cmisDH.png](https://z3.ax1x.com/2021/04/02/cmisDH.png)](https://imgtu.com/i/cmisDH)
 
-## #80 删除有序数组的重复项Ⅱ `Medium`
+## #80 删除有序数组的重复项 v2 `Medium`
 
 ### 描述
 
@@ -422,7 +422,7 @@
 
     [![cltwOP.png](https://z3.ax1x.com/2021/04/06/cltwOP.png)](https://imgtu.com/i/cltwOP)
 
-## #154 寻找旋转排序数组中的最小值 Ⅱ `Hard`
+## #154 寻找旋转排序数组中的最小值 v2 `Hard`
 
 ### 描述
 
