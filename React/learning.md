@@ -2,6 +2,8 @@
 
 ## useEffect 钩子
 
+### 简介
+
 在 React 中，组件写法有两种，可以使用类的方法来定义组件，同时也可以使用函数的方法。
 
 - 使用类生成组件：
@@ -24,7 +26,7 @@
 
 其中官方推荐使用函数的方式去生成一个组件。React 组件的思想使用的就是函数式编程的思想，所以使用函数的方法去定义更符合 React 的本质。
 
-具体内容可以参考 [FunctionalProgramming](../FuctionalProgramming/learning.md) 中 `类和函数的差异` 的内容。
+具体内容可以参考 [FunctionalProgramming](../FuctionalProgramming/learning.md##类和函数的差异) 中 `类和函数的差异` 的内容。
 
 ### 那么什么是钩子呢
 
@@ -84,4 +86,108 @@ useEffect(() => {
 
 上面例子中，`useEffect()` 在组件加载时订阅了一个事件，并且返回一个清理函数，在组件卸载时取消订阅。
 
-实际使用中，由于副效应函数默认是每次渲染都会执行，所以清理函数不仅会在组件卸载时执行一次，每次副效应函数重新执行之前，也会执行一次，用来清理上一次渲染的副效应
+实际使用中，由于副效应函数默认是每次渲染都会执行，所以清理函数不仅会在组件卸载时执行一次，每次副效应函数重新执行之前，也会执行一次，用来清理上一次渲染的副效应。
+
+## useState 方法
+
+### 简介
+
+在 Vue 中，注册于 `data()` 中的变量都为响应式变量，每当响应式变量改变后，`DOM` 中绑定响应式变量的值就会发生改变，而在 React 中，只声明一个变量是无法做到响应式的，我们需要使用 `useState` 方法去声明一个响应式变量。
+
+```javaScript
+import {useState} from "react";
+
+const [data, setData] = useState(0)
+```
+
+可以看到我们在声明 `data` 的同时，也声明了一个 `setData` 的方法，这个 `setData` 有什么用处呢？如果对 Vue 中的响应式原理有一定了解的话，看到这行代码大概就能猜到 `setData` 的用处了。
+
+### 什么是 setData
+
+`setData` 与 `data` 一同被声明，`data` 很好理解，就是变量，那么 `setData` 就是改变 `data` 的函数，对于观察者模式以及 Vue 的响应式原理可以参考此处，那么根据响应式原理，我们对于 `setData` 的理解就相对清晰了，当使用 `setData` 函数修改了 `data` 的值之后，与 `data` 有关联的地方都将发生对应改变。
+
+- 示例：
+
+    ```javaScript
+    import React, {FC, useState} from 'react';
+
+    const App: FC<any> = () => {
+      const [data, setData] = useState(0)
+
+      const handleClick = () => {
+        setData(data + 1)
+      }
+
+      return(
+        <h1 onclick={handleClick}>{data}</h1>
+      )
+    }
+    ```
+
+    我们可以很直观的看出，当点击 `data` 所在的 `<h1>` 区域时，`data` 会自增，并同时展现在 `DOM` 区域。
+
+    值得注意的是，同 Vue 中观察者模式一样， `setData` 是一个异步事件。
+
+### 设置复杂类型
+
+当我们的 `data` 并不仅仅是一个数字类型，而是一个对象时，我们可以参考以下代码：
+
+```javaScript
+import React, {FC, useState} from 'react';
+
+  const App: FC<any> = () => {
+    const [data, setData] = useState({
+      lastName: 'Yan',
+      firstName: 'Lasia'
+    })
+
+    const handleClick = () => {
+      setData({
+        lastName: 'Yan',
+        firstName: '晓骁'
+      })
+    }
+
+    return(
+      <div>
+        <h1 onclick={handleClick}>{data.firstName}</h1>
+        <h1 >{data.lastName}</h1>
+      </div>
+    )
+  }
+```
+
+### 一些 TypeScript 写法
+
+- 初始化响应式对象：
+
+    ```typeScript
+    interface Person{
+      lastName: String,
+      firstName: String,
+      age: Number,
+      gender: String
+    }
+
+    const [data, setData] = useState<Person>({
+      lastName: 'Yan',
+      firstName: 'Lasia',
+      age: 21,
+      gender: 'Male'
+    })
+
+    setData({
+      lastName: 'Yan',
+      firstName: 'Lasia',
+      age: 18,
+      gender: 'Female'
+    })
+    ```
+
+- 初始化响应式数组：
+
+    ```typeScript
+    const [data, setData] = useState<Array<String>>(['Lasia'])
+
+    setData([...data, 'Yan']) // data -> ['Lasia', 'Yan']
+    ```
